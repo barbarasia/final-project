@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: Wine Data API
+  description: API for wine consumption, production and alcohol spending per year, country and type
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+paths:
+  /wine_consumption:
+    get:
+      summary: Retrieve wine consumption data
+      parameters:
+        - in: query
+          name: country
+          schema:
+            type: string
+          description: Country name to filter data
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: Year to filter data
+      responses:
+        '200':
+          description: A list of wine consumption data
+  /wine_production:
+    get:
+      summary: Retrieve wine production data
+      parameters:
+        - in: query
+          name: country
+          schema:
+            type: string
+          description: Country name to filter data
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: Year to filter data
+      responses:
+        '200':
+          description: A list of wine production data
+  /alcohol_spending:
+    get:
+      summary: Retrieve alcohol spending data
+      parameters:
+        - in: query
+          name: year
+          schema:
+            type: integer
+          description: Year to filter data
+        - in: query
+          name: type
+          schema:
+            type: string
+          description: Type of alcohol to filter data
+      responses:
+        '200':
+          description: A list of alcohol spending data
