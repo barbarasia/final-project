@@ -1,11 +1,16 @@
 import streamlit as st
+import os
+import warnings
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from tensorflow.keras.applications.vgg16 import preprocess_input
 from PIL import Image
 import numpy as np
 import pandas as pd
-import os
+
+# Suppress TensorFlow logs and warnings
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
+warnings.filterwarnings('ignore')
 
 # Load the trained model
 model = tf.keras.models.load_model("MachineLearning/food_recognition_model4.h5")
@@ -44,14 +49,8 @@ def predict_image(img_path):
 # Open the image
 img = Image.open("MachineLearning/wine_images/wain_site_cover.png")
 
-# # Resize the image (you can specify both width and height)
-# new_width = 600
-# new_height = 300
-# img = img.resize((new_width, new_height))
-
 # Display the resized image
 st.image(img, use_column_width=True)
-
 
 st.title("Upload an image of your meal and get a wine recommendation!")
 
@@ -97,7 +96,6 @@ if uploaded_file is not None:
         font-size: 24px; /* Adjust the font size as needed */
         line-height: 1.6; /* Adjust the line height for better readability */
         margin-bottom: 20px; /* Add space after the text */
-
         }
         </style>
         """
