@@ -52,76 +52,86 @@ def preprocess_image(img_path):
         return None
 
 def predict_image(img_path):
-    img_array = preprocess_image(img_path)
-    if img_array is not None:
-        predictions = model.predict(img_array)
-        predicted_class = class_names[np.argmax(predictions)]
-        confidence = np.max(predictions)  # Get the confidence of the prediction
-        return predicted_class, confidence, get_wine_recommendation(predicted_class), predictions
-    else:
+    try:
+        img_array = preprocess_image(img_path)
+        if img_array is not None:
+            predictions = model.predict(img_array)
+            predicted_class = class_names[np.argmax(predictions)]
+            confidence = np.max(predictions)  # Get the confidence of the prediction
+            return predicted_class, confidence, get_wine_recommendation(predicted_class), predictions
+        else:
+            return None, None, ("No prediction available", ""), None
+    except Exception as e:
+        st.error(f"Error during model prediction: {e}")
         return None, None, ("No prediction available", ""), None
 
 # Open the image
-img = Image.open("MachineLearning/wine_images/wain_site_cover.png")
-st.image(img, use_column_width=True)
+try:
+    img = Image.open("MachineLearning/wine_images/wain_site_cover.png")
+    st.image(img, use_column_width=True)
+except Exception as e:
+    st.error(f"Error loading cover image: {e}")
 
 st.title("Upload an image of your meal and get a wine recommendation!")
 
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
-    img = Image.open(uploaded_file).convert('RGB')  # Ensure image is in RGB format
-    st.image(img, caption="Your Meal Image", use_column_width=True)
-    
-    st.write("Classifying...")
-    img.save("temp_image.jpg")  # Save the uploaded image to a temporary file
-    label, confidence, (wine_recommendation, wine_image_url), predictions = predict_image("temp_image.jpg")
-    
-    if label:
-        st.title(f"It looks like it's {label}")
-
-        # Load the metrics from the CSV file
-        metrics_df = pd.read_csv("MachineLearning/metrics.csv")
-
-        # Transpose and set the first row as the header
-        metrics_df = metrics_df.T
-        metrics_df.columns = metrics_df.iloc[0]
-        metrics_df = metrics_df[1:]
-
-        # Extract metrics for the predicted class
-        class_metrics = metrics_df[label]
-
-        # Create an expander for details
-        with st.expander("See Details"):
-            st.write(f"Confidence: {confidence:.2f}")
-            if not class_metrics.empty:
-                st.write(f"Precision Score of {label} class: {float(class_metrics['precision']):.2f}")
-                st.write(f"Recall Score of {label} class: {float(class_metrics['recall']):.2f}")
-                st.write(f"F1-Score Score of {label} class: {float(class_metrics['f1-score']):.2f}")
-            else:
-                st.write("No metrics available for this class.")
+    try:
+        img = Image.open(uploaded_file).convert('RGB')  # Ensure image is in RGB format
+        st.image(img, caption="Your Meal Image", use_column_width=True)
         
-        # Define custom CSS for text wrapping
-        custom_css = """
-            <style>
-            .wine-recommendation {
-            white-space: pre-wrap; /* Ensures text wraps and preserves newlines */
-            word-wrap: break-word; /* Ensures long words break properly */
-            font-size: 24px; /* Adjust the font size as needed */
-            line-height: 1.6; /* Adjust the line height for better readability */
-            margin-bottom: 20px; /* Add space after the text */
-            }
-            </style>
-            """
+        st.write("Classifying...")
+        img.save("temp_image.jpg")  # Save the uploaded image to a temporary file
+        label, confidence, (wine_recommendation, wine_image_url), predictions = predict_image("temp_image.jpg")
+        
+        if label:
+            st.title(f"It looks like it's {label}")
 
-        # Inject the custom CSS
-        st.markdown(custom_css, unsafe_allow_html=True)
+            # Load the metrics from the CSV file
+            metrics_df = pd.read_csv("MachineLearning/metrics.csv")
 
-        # Use a div with the custom CSS class
-        st.title("Wine recommendation for your meal is:")
-        st.markdown(f"<div class='wine-recommendation'>{wine_recommendation}</div>", unsafe_allow_html=True)
+            # Transpose and set the first row as the header
+            metrics_df = metrics_df.T
+            metrics_df.columns = metrics_df.iloc[0]
+            metrics_df = metrics_df[1:]
 
-        if wine_image_url:
-            st.image(wine_image_url, caption="Recommended Wine", use_column_width=True)
-    else:
-        st.error("Error predicting the class of the image.")
+            # Extract metrics for the predicted class
+            class_metrics = metrics_df[label]
+
+            # Create an expander for details
+            with st.expander("See Details"):
+                st.write(f"Confidence: {confidence:.2f}")
+                if not class_metrics.empty:
+                    st.write(f"Precision Score of {label} class: {float(class_metrics['precision']):.2f}")
+                    st.write(f"Recall Score of {label} class: {float(class_metrics['recall']):.2f}")
+                    st.write(f"F1-Score Score of {label} class: {float(class_metrics['f1-score']):.2f}")
+                else:
+                    st.write("No metrics available for this class.")
+            
+            # Define custom CSS for text wrapping
+            custom_css = """
+                <style>
+                .wine-recommendation {
+                white-space: pre-wrap; /* Ensures text wraps and preserves newlines */
+                word-wrap: break-word; /* Ensures long words break properly */
+                font-size: 24px; /* Adjust the font size as needed */
+                line-height: 1.6; /* Adjust the line height for better readability */
+                margin-bottom: 20px; /* Add space after the text */
+                }
+                </style>
+                """
+
+            # Inject the custom CSS
+            st.markdown(custom_css, unsafe_allow_html=True)
+
+            # Use a div with the custom CSS class
+            st.title("Wine recommendation for your meal is:")
+            st.markdown(f"<div class='wine-recommendation'>{wine_recommendation}</div>", unsafe_allow_html=True)
+
+            if wine_image_url:
+                st.image(wine_image_url, caption="Recommended Wine", use_column_width=True)
+        else:
+            st.error("Error predicting the class of the image.")
+    except Exception as e:
+        st.error(f"Error processing uploaded file: {e}")
