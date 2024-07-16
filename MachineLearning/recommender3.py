@@ -1,16 +1,17 @@
 import streamlit as st
+import os
+import warnings
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from tensorflow.keras.applications.vgg16 import preprocess_input
 from PIL import Image
 import numpy as np
 import pandas as pd
-import os
-import warnings
+import sys
+import contextlib
 
 # Suppress TensorFlow logs and warnings
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
-warnings.filterwarnings('ignore')
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow logging
 
 @st.cache(allow_output_mutation=True)
 def load_model():
@@ -50,11 +51,26 @@ def preprocess_image(img_path):
         st.error(f"Error preprocessing image: {e}")
         return None
 
+# Context manager to suppress stdout and stderr
+@contextlib.contextmanager
+def suppress_stdout_stderr():
+    with open(os.devnull, 'w') as devnull:
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        try:
+            sys.stdout = devnull
+            sys.stderr = devnull
+            yield
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
+
 def predict_image(img_path):
     try:
         img_array = preprocess_image(img_path)
         if img_array is not None:
-            predictions = model.predict(img_array)
+            with suppress_stdout_stderr():
+                predictions = model.predict(img_array)
             predicted_class = class_names[np.argmax(predictions)]
             confidence = np.max(predictions)  # Get the confidence of the prediction
             return predicted_class, confidence, get_wine_recommendation(predicted_class), predictions
@@ -108,7 +124,7 @@ if uploaded_file is not None:
                 else:
                     st.write("No metrics available for this class.")
             
-            # Define custom CSS for text wrapping   
+            # Define custom CSS for text wrapping
             custom_css = """
                 <style>
                 .wine-recommendation {
