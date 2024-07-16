@@ -88,8 +88,22 @@ if uploaded_file is not None:
         else:
             st.write("No metrics available for this class.")
     
-    st.title("Wine recommendation for your meal is:")
-    st.text(wine_recommendation)
+# Define custom CSS for text wrapping
+custom_css = """
+<style>
+    .wine-recommendation {
+        white-space: pre-wrap; /* Ensures text wraps and preserves newlines */
+        word-wrap: break-word; /* Ensures long words break properly */
+    }
+</style>
+"""
+
+# Inject the custom CSS
+st.markdown(custom_css, unsafe_allow_html=True)
+
+# Use a div with the custom CSS class
+st.title("Wine recommendation for your meal is:")
+st.markdown(f"<div class='wine-recommendation'>{wine_recommendation}</div>", unsafe_allow_html=True)
 
     if wine_image_url:
         st.image(wine_image_url, caption="Recommended Wine", use_column_width=True)
