@@ -1,23 +1,22 @@
 import streamlit as st
-import os
-import warnings
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import img_to_array, load_img
 from tensorflow.keras.applications.vgg16 import preprocess_input
 from PIL import Image
 import numpy as np
 import pandas as pd
+import os
+import warnings
 
 # Suppress TensorFlow logs and warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # FATAL
 warnings.filterwarnings('ignore')
 
-# Load the trained model
-model_path = "MachineLearning/food_recognition_model4.h5"
-if os.path.exists(model_path):
-    model = tf.keras.models.load_model(model_path)
-else:
-    st.error(f"Model file not found at {model_path}")
+@st.cache(allow_output_mutation=True)
+def load_model():
+    return tf.keras.models.load_model("MachineLearning/food_recognition_model4.h5")
+
+model = load_model()
 
 # New class names
 class_names = [
@@ -109,7 +108,7 @@ if uploaded_file is not None:
                 else:
                     st.write("No metrics available for this class.")
             
-            # Define custom CSS for text wrapping
+            # Define custom CSS for text wrapping   
             custom_css = """
                 <style>
                 .wine-recommendation {
