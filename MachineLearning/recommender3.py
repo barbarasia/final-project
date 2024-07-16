@@ -94,6 +94,8 @@ if uploaded_file is not None:
         .wine-recommendation {
         white-space: pre-wrap; /* Ensures text wraps and preserves newlines */
         word-wrap: break-word; /* Ensures long words break properly */
+        font-size: 18px; /* Adjust the font size as needed */
+        line-height: 1.6; /* Adjust the line height for better readability */
         }
         </style>
         """
