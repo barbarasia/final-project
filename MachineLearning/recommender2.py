@@ -19,7 +19,7 @@ class CustomImageDataGenerator(ImageDataGenerator):
         return generator
 
 # Load the trained model
-model = tf.keras.models.load_model('/Users/Barbara/Desktop/Ironhack/Final_Project/food_recognition_model4.h5')
+model = tf.keras.models.load_model('/Users/Barbara/Desktop/Ironhack/Final_Project/final-project/MachineLearning/food_recognition_model4.h5')
 
 # New class names
 class_names = ['Bread', 'Dairy product', 'Dessert', 'Egg', 'Fried food', 'Meat', 'Noodles-Pasta', 'Rice', 'Seafood', 'Soup', 'Vegetable-Fruit']
@@ -115,4 +115,4 @@ if uploaded_file is not None:
     st.text(wine_recommendation)
 
     if wine_image_url:
-        st.image(wine_image_url, caption='Recommended Wine', use_column_width=True)
+        st.image(wine_image_url, caption='Recommended
