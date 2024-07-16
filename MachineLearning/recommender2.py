@@ -19,14 +19,14 @@ class CustomImageDataGenerator(ImageDataGenerator):
         return generator
 
 # Load the trained model
-model = tf.keras.models.load_model("/Users/Barbara/Desktop/Ironhack/Final_Project/final-project/MachineLearning/food_recognition_model4.h5")
+model = tf.keras.models.load_model("MachineLearning/food_recognition_model4.h5")
 
 # New class names
 class_names = ['Bread', 'Dairy product', 'Dessert', 'Egg', 'Fried food', 'Meat', 'Noodles-Pasta', 'Rice', 'Seafood', 'Soup', 'Vegetable-Fruit']
 
 # Load wine recommendations from CSV
 try:
-    df_wine_suggestions = pd.read_csv("/Users/Barbara/Desktop/Ironhack/Final_Project/final-project/MachineLearning/df_wine_suggestions.csv")
+    df_wine_suggestions = pd.read_csv("MachineLearning/df_wine_suggestions.csv")
 except Exception as e:
     st.error(f"Error loading wine suggestions CSV: {e}")
 
@@ -74,7 +74,7 @@ def predict_image_without_datagen(img_path):
     confidence = np.max(predictions)  # Get the confidence of the prediction
     return predicted_class, confidence, get_wine_recommendation(predicted_class), predictions
 
-st.image("/Users/Barbara/Desktop/Ironhack/Final_Project/final-project/MachineLearning/wine_images/app_image.png", use_column_width=True)  # Replace with your image path
+st.image("MachineLearning/wine_images/app_image.png", use_column_width=True)  # Replace with your image path
 
 st.title("Upload an image of your meal and get a wine recommendation!")
 
@@ -91,7 +91,7 @@ if uploaded_file is not None:
     st.title(f"It looks like it's {label}")
 
     # Load the metrics from the CSV file
-    metrics_df = pd.read_csv("/Users/Barbara/Desktop/Ironhack/Final_Project/final-project/MachineLearning/metrics.csv")
+    metrics_df = pd.read_csv("MachineLearning/metrics.csv")
 
     # Transpose and set the first row as the header
     metrics_df = metrics_df.T
