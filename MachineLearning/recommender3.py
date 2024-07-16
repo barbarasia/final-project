@@ -96,6 +96,8 @@ if uploaded_file is not None:
         word-wrap: break-word; /* Ensures long words break properly */
         font-size: 24px; /* Adjust the font size as needed */
         line-height: 1.6; /* Adjust the line height for better readability */
+
+        
         }
         </style>
         """
