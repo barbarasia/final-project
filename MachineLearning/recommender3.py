@@ -41,7 +41,7 @@ def predict_image(img_path):
     confidence = np.max(predictions)  # Get the confidence of the prediction
     return predicted_class, confidence, get_wine_recommendation(predicted_class), predictions
 
-st.image("MachineLearning/wine_images/app_image.png", use_column_width=True)  # Replace with your image path
+st.image("MachineLearning/wine_images/wain_site_cover.png", use_column_width=True)  # Replace with your image path
 
 st.title("Upload an image of your meal and get a wine recommendation!")
 
