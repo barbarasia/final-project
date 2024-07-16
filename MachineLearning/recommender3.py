@@ -8,7 +8,7 @@ import pandas as pd
 import os
 
 # Load the trained model
-model = tf.keras.models.load_model("MachineLearning/models/food_recognition_model4.h5")
+model = tf.keras.models.load_model("MachineLearning/food_recognition_model4.h5")
 
 # New class names
 class_names = ['Bread', 'Dairy product', 'Dessert', 'Egg', 'Fried food', 'Meat', 'Noodles-Pasta', 'Rice', 'Seafood', 'Soup', 'Vegetable-Fruit']
